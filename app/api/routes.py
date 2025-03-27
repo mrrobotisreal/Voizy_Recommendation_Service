@@ -9,6 +9,7 @@ from app.data.repositories.user_repository import UserRepository
 from app.data.repositories.content_repository import ContentRepository
 from app.data.repositories.interaction_repository import InteractionRepository
 from app.ml.models.hybrid import HybridRecommender
+from app.ml.training.trainer import ModelTrainer
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -132,6 +133,7 @@ async def get_recommendations(
 async def train_model(
         background_tasks: BackgroundTasks,
         db: Session = Depends(get_db),
+        model_type: str = "hybrid",
         user_repo: UserRepository = Depends(get_user_repository),
         content_repo: ContentRepository = Depends(get_content_repository),
         interaction_repo: InteractionRepository = Depends(get_interaction_repository)
@@ -140,6 +142,12 @@ async def train_model(
     try:
         # This would be implemented to train the model in the background
         # For now, just return a success response
+        trainer = ModelTrainer(db)
+
+        background_tasks.add_task(trainer.train_model, model_type)
+
+        logging.info(f"Model training scheduled for model type: {model_type}")
+
         return {"status": "training_started", "message": "Model training has been scheduled"}
     except Exception as e:
         logger.error(f"Error scheduling model training: {str(e)}")

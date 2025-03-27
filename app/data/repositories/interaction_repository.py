@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func, desc, and_, or_
+from sqlalchemy import func, desc, and_, or_, text, literal
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 import json
@@ -23,7 +23,7 @@ class InteractionRepository:
                 PostReaction.post_id,
                 PostReaction.reaction_type,
                 PostReaction.reacted_at.label("interaction_time"),
-                func.literal("reaction").label("interaction_type")
+                literal("reaction").label("interaction_type")
             )
             .filter(
                 PostReaction.user_id == user_id,
@@ -35,9 +35,9 @@ class InteractionRepository:
         comments = (
             db.query(
                 Comment.post_id,
-                func.literal("comment").label("interaction_type"),
+                literal("comment").label("interaction_type"),
                 Comment.created_at.label("interaction_time"),
-                func.literal("comment").label("reaction_type")
+                literal("comment").label("reaction_type")
             )
             .filter(
                 Comment.user_id == user_id,
@@ -49,9 +49,9 @@ class InteractionRepository:
         shares = (
             db.query(
                 PostShare.post_id,
-                func.literal("share").label("interaction_type"),
+                literal("share").label("interaction_type"),
                 PostShare.shared_at.label("interaction_time"),
-                func.literal("share").label("reaction_type")
+                literal("share").label("reaction_type")
             )
             .filter(
                 PostShare.user_id == user_id,
@@ -59,8 +59,12 @@ class InteractionRepository:
             )
         )
 
+        combined_query = reactions.union(comments).union(shares).subquery()
+
+        final_query = db.query(combined_query).order_by(combined_query.c.interaction_time.desc())
+
         # Combine all interactions
-        combined = reactions.union(comments).union(shares).order_by(desc("interaction_time")).all()
+        combined = final_query.all()
 
         # Format results
         result = []
