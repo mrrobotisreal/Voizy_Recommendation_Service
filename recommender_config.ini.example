@@ -1,0 +1,16 @@
+[DATABASE]
+HOST = localhost
+USER = voizy_user
+PASSWORD = your_secure_password
+DATABASE = voizy_db
+
+[API]
+HOST = 0.0.0.0
+PORT = 5000
+DEBUG = false
+ADMIN_KEY = your_secret_admin_key_for_manual_refresh
+
+[RECOMMENDER]
+MODEL_PATH = ./models/voizy_recommender
+REFRESH_INTERVAL = 86400  # 24 hours in seconds
+CACHE_TTL = 3600  # 1 hour in seconds
