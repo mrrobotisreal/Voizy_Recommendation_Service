@@ -18,8 +18,8 @@ logger = logging.getLogger("schema-creator")
 DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
     "port": int(os.getenv("DB_PORT", "3306")),
-    "database": os.getenv("DBN"),
-    "user": os.getenv("DBU"),
+    "database": "voizy",
+    "user": "mwintrow",
     "password": os.getenv("DBP")
 }
 
@@ -351,6 +351,31 @@ def create_tables():
         '''
         cursor.execute(post_media_table)
 
+        logger.info("Creating post views table...")
+        post_views_table = '''
+        CREATE TABLE IF NOT EXISTS post_views (
+            view_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            post_id BIGINT NOT NULL,
+            user_id BIGINT NOT NULL,
+            viewed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+            UNIQUE KEY unique_view (post_id, user_id)
+        )
+        '''
+
+        logger.info("Creating post impressions table...")
+        post_impressions_table = '''
+        CREATE TABLE IF NOT EXISTS post_impressions (
+            impression_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            post_id BIGINT NOT NULL,
+            user_id BIGINT NOT NULL,
+            impressed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+        )
+        '''
+
         # Messages and Chat
         logger.info("Creating conversations table...")
         conversations_table = '''
@@ -446,83 +471,6 @@ def create_tables():
         );
         '''
         cursor.execute(analytics_events_table)
-
-        # Recommendation system tables
-        # logger.info("Creating recommendation models table...")
-        # recommendation_models_table = '''
-        # CREATE TABLE IF NOT EXISTS recommendation_models (
-        #     model_id       INT PRIMARY KEY AUTO_INCREMENT,
-        #     model_type     VARCHAR(100) NOT NULL,
-        #     model_version  VARCHAR(50) NOT NULL,
-        #     model_weights  JSON,
-        #     metrics        JSON,
-        #     created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        #     is_active      BOOLEAN NOT NULL DEFAULT FALSE
-        # );
-        # '''
-        # cursor.execute(recommendation_models_table)
-        #
-        # logger.info("Creating user embeddings table...")
-        # user_embeddings_table = '''
-        # CREATE TABLE IF NOT EXISTS user_embeddings (
-        #     embedding_id     INT PRIMARY KEY AUTO_INCREMENT,
-        #     user_id          BIGINT NOT NULL,
-        #     embedding_vector JSON NOT NULL,
-        #     embedding_type   VARCHAR(50) NOT NULL,
-        #     created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        #     updated_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        #     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-        # );
-        # '''
-        # cursor.execute(user_embeddings_table)
-        #
-        # logger.info("Creating content embeddings table...")
-        # content_embeddings_table = '''
-        # CREATE TABLE IF NOT EXISTS content_embeddings (
-        #     embedding_id     INT PRIMARY KEY AUTO_INCREMENT,
-        #     content_id       BIGINT NOT NULL,
-        #     embedding_vector JSON NOT NULL,
-        #     embedding_type   VARCHAR(50) NOT NULL,
-        #     created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        #     updated_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        #     FOREIGN KEY (content_id) REFERENCES posts(post_id) ON DELETE CASCADE
-        # );
-        # '''
-        # cursor.execute(content_embeddings_table)
-        #
-        # logger.info("Creating user content interactions table...")
-        # user_content_interactions_table = '''
-        # CREATE TABLE IF NOT EXISTS user_content_interactions (
-        #     interaction_id    INT PRIMARY KEY AUTO_INCREMENT,
-        #     user_id           BIGINT NOT NULL,
-        #     content_id        BIGINT NOT NULL,
-        #     interaction_type  VARCHAR(50) NOT NULL,
-        #     interaction_value FLOAT DEFAULT 1.0,
-        #     created_at        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        #     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-        #     FOREIGN KEY (content_id) REFERENCES posts(post_id) ON DELETE CASCADE
-        # );
-        # '''
-        # cursor.execute(user_content_interactions_table)
-        #
-        # logger.info("Creating user recommendations table...")
-        # user_recommendations_table = '''
-        # CREATE TABLE IF NOT EXISTS user_recommendations (
-        #     recommendation_id INT PRIMARY KEY AUTO_INCREMENT,
-        #     user_id           BIGINT NOT NULL,
-        #     content_id        BIGINT NOT NULL,
-        #     model_id          INT NOT NULL,
-        #     score             FLOAT NOT NULL,
-        #     explanation       JSON,
-        #     is_seen           BOOLEAN DEFAULT FALSE,
-        #     was_clicked       BOOLEAN DEFAULT FALSE,
-        #     created_at        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        #     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-        #     FOREIGN KEY (content_id) REFERENCES posts(post_id) ON DELETE CASCADE,
-        #     FOREIGN KEY (model_id) REFERENCES recommendation_models(model_id) ON DELETE CASCADE
-        # );
-        # '''
-        # cursor.execute(user_recommendations_table)
 
         conn.commit()
         logger.info("All tables created successfully!")

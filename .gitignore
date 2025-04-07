@@ -43,3 +43,6 @@ models/*
 
 # Windows
 Thumbs.db
+
+# Scripts
+scripts/try_x_personalized_trends.py
