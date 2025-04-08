@@ -47,7 +47,7 @@ def create_additional_tables():
         if event_type_column:
             logger.info("Updating analytics_events table")
             cursor.execute("""
-            ALTER TABLE analytics_events 
+            ALTER TABLE analytics_events
             MODIFY COLUMN event_type VARCHAR(100) NOT NULL,
             ADD INDEX idx_analytics_event_type (event_type),
             ADD INDEX idx_analytics_object_type_id (object_type, object_id),

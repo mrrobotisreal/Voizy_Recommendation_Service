@@ -52,9 +52,9 @@ DB_CONFIG = {
 
 CONFIG = {
     "users": {
-        "count": 50_000,
+        "count": 150_000,
         "generation_chunk_size": 10_000,
-        "posts_per_user": (3, 15),
+        "posts_per_user": (3, 50),
         "friends_per_user": (5, 1000),
     },
     "posts": {
@@ -64,13 +64,13 @@ CONFIG = {
         "share_ratio": (0.33, 0.66),
     },
     "caps": {
-        "max_reactions": 10,
-        "max_comments": 5,
-        "max_shares": 10,
+        "max_reactions": 100,
+        "max_comments": 50,
+        "max_shares": 100,
     },
     "safeguards": {
-        "max_ram_percent": 82,
-        "max_cpu_percent": 86
+        "max_ram_percent": 92,
+        "max_cpu_percent": 94
     },
     "db_read_chunk_size": 10_000,
     "num_processes": 24
@@ -334,7 +334,7 @@ def generate_post_interactions_chunk(args):
         user_id_owner = post_row["user_id"]
         post_created_at = post_row["created_at"]
 
-        views = random.randint(0, 109_999)  # <- don't forget to adjust this to correspond to the num users generated
+        views = random.randint(0, 149_999)  # <- don't forget to adjust this to correspond to the num users generated
 
         # Reactions
         # ratio-based
