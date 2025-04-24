@@ -45,7 +45,16 @@
 
 **Quick Walkthrough Demo**
 
-[Profile Demo link](https://vigorous-helicona-f1e.notion.site/Voizy-Official-Documentation-1b526f695b8e80129187e9c97396e2b9)
+_1. Home Screen (Recommended Posts) & Feeds Screen_, _2. Groups Screen & People Screen_
+
+![fastXS_Demo1_HomeAndFeeds](https://github.com/user-attachments/assets/e7a6065e-8382-4dfa-bf99-ec2fea9cb593)
+![fastXS_Demo2_GroupsAndPeople](https://github.com/user-attachments/assets/c1d81bfb-f6a4-4504-9b27-b7ef226ef56a)
+
+_1. Profile Screen_, _2. App & Profile Preferences_, _3. Create a Post_
+
+![fastXS_Demo3_Profile](https://github.com/user-attachments/assets/9f38eea7-d859-4e65-9398-34f697159a35)
+![fastXS_Demo4_Preferences](https://github.com/user-attachments/assets/36d31f80-2a43-4c1a-93a8-2a94d300f342)
+![fastXS_Demo5_CreatePost](https://github.com/user-attachments/assets/db02f457-c36a-47e8-9854-973402aed81e)
 
 ![Login Screen](https://winapps-solutions-llc.s3.us-west-2.amazonaws.com/portfolio/voizy/demos/main_profile/readme/voizy33.jpg)
 ![Create Account Screen](https://winapps-solutions-llc.s3.us-west-2.amazonaws.com/portfolio/voizy/demos/main_profile/readme/voizy34.jpg)
